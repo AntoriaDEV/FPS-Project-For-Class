@@ -15,6 +15,23 @@ public class PlayerHUD : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = FindObjectOfType<FPSController>();
+        player = FindObjectOfType<FPSController>();   
     }
+
+    void OnEnable()
+    {
+        Gun.OnAmmoChanged += UpdateAmmo;
+    }
+
+    void OnDisable()
+    {
+        Gun.OnAmmoChanged -= UpdateAmmo;
+    }
+
+    void UpdateAmmo(int currentAmmo, int maxAmmo)
+    {
+        currentAmmoText.text = currentAmmo.ToString();
+        maxAmmoText.text = maxAmmo.ToString();
+    }
+
 }

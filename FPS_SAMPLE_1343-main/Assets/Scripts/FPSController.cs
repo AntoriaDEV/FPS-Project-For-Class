@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FPSController : MonoBehaviour
 {
+    int health = 100;
+    [SerializeField] UnityEvent<int> OnHealthChanged;
     // references
     CharacterController controller;
     [SerializeField] GameObject cam;
@@ -167,6 +170,8 @@ public class FPSController : MonoBehaviour
     {
         if (hit.gameObject.GetComponent<Damager>())
         {
+            health -= 10;
+            OnHealthChanged.Invoke(health);
             var collisionPoint = hit.collider.ClosestPoint(transform.position);
             var knockbackAngle = (transform.position - collisionPoint).normalized;
             velocity = (20 * knockbackAngle);

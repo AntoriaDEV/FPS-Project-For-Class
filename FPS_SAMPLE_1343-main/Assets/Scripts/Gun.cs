@@ -1,9 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
+    public static event Action<int, int> OnAmmoChanged;
+    public static event Action OnGunFired;
+
     // references
     [SerializeField] Transform gunBarrelEnd;
     [SerializeField] GameObject bulletPrefab;
@@ -21,6 +25,8 @@ public class Gun : MonoBehaviour
     void Start()
     {
         ammo = maxAmmo;
+
+        OnAmmoChanged?.Invoke(ammo, maxAmmo);
     }
 
     // Update is called once per frame
@@ -47,11 +53,19 @@ public class Gun : MonoBehaviour
         timeBetweenShots = 0;
         ammo -= 1;
 
+        OnAmmoChanged?.Invoke(ammo, maxAmmo);
+        OnGunFired?.Invoke();
+
         return true;
     }
 
     public void AddAmmo(int amount)
     {
         ammo += amount;
+
+        if (ammo > maxAmmo)
+            ammo = maxAmmo;
+
+        OnAmmoChanged?.Invoke(ammo, maxAmmo);
     }
 }
